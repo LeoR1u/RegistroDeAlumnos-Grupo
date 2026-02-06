@@ -1,0 +1,89 @@
+===============================================
+  COMANDOS GIT - COPIA Y PEGA EN GIT BASH
+===============================================
+
+============ PASO 1: CLONAR REPOSITORIO ============
+
+cd /c/xampp/htdocs
+
+git clone https://github.com/LeoR1u/RegistroDeAlumnos-Grupo.git
+
+cd RegistroDeAlumnos-Grupo
+
+
+============ PASO 2: CREAR CARPETAS ============
+
+mkdir api
+mkdir config  
+mkdir includes
+mkdir js
+
+
+============ PASO 3: VER QUÉ TIENES ============
+
+ls -la
+
+
+============ PASO 4: AGREGAR ARCHIVOS ============
+(Después de copiar los archivos PHP y JS a sus carpetas)
+
+git status
+
+git add .
+
+
+============ PASO 5: HACER COMMIT ============
+
+git commit -m "feat(backend): agregar API REST y base de datos"
+
+
+============ PASO 6: SUBIR A GITHUB ============
+
+git push origin main
+
+
+===============================================
+  SI TE PIDE USUARIO Y CONTRASEÑA
+===============================================
+
+Usa tu usuario de GitHub y un Personal Access Token como contraseña.
+Para crear el token: GitHub → Settings → Developer settings → Personal access tokens
+
+
+===============================================
+  SI HAY CONFLICTOS AL HACER PUSH
+===============================================
+
+git pull origin main
+
+(resuelve conflictos si hay)
+
+git add .
+git commit -m "fix: resolver conflictos"
+git push origin main
+
+
+===============================================
+  PARA VER CAMBIOS DE TU COMPAÑERO
+===============================================
+
+git pull origin main
+
+
+===============================================
+  ESTRUCTURA FINAL DEL PROYECTO
+===============================================
+
+RegistroDeAlumnos-Grupo/
+├── api/
+│   ├── alumnos.php
+│   ├── grupos.php
+│   └── catalogos.php
+├── config/
+│   └── database.php
+├── includes/
+│   └── functions.php
+├── js/
+│   └── api-client.js
+├── database.sql
+└── README.md
