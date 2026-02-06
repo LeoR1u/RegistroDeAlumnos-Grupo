@@ -322,6 +322,9 @@ if (!isset($pageTitle)) {
             <a href="/ver_grupos.php" class="<?= in_array(basename($_SERVER['PHP_SELF']), ['ver_grupos.php', 'formulario_grupo.php']) ? 'active' : '' ?>">
                 Grupos
             </a>
+            <a href="/catalogos.php" class="<?= in_array(basename($_SERVER['PHP_SELF']), ['catalogos.php', 'catalogo_carreras.php', 'catalogo_turnos.php']) ? 'active' : '' ?>">
+                Catálogos
+            </a>
         </div>
     </nav>
 
