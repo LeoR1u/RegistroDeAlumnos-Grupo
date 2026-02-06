@@ -4,7 +4,7 @@ Sistema de registro de alumnos y grupos.
 
 ## 👥 Equipo
 - **LeoR1u** - Frontend (HTML, CSS, JavaScript)
-- **Jonathan** - Backend (PHP, MySQL, API REST)
+- **Daniel Gutierrez Vazquez** - Backend (PHP, MySQL, API REST)
 
 ---
 
