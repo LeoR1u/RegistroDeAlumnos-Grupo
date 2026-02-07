@@ -7,52 +7,237 @@ $isEdit = isset($_GET['id']) && !empty($_GET['id']);
 $id = $isEdit ? (int)$_GET['id'] : 0;
 
 $pageTitle = $isEdit ? 'Editar Alumno' : 'Registrar Alumno';
+$breadcrumb = [
+    ['text' => 'Alumnos', 'url' => 'ver_alumnos.php'],
+    ['text' => $isEdit ? 'Editar' : 'Nuevo']
+];
 include 'includes/header.php';
 ?>
 
-<div class="container">
-    <h2><?= $isEdit ? 'Editar Alumno' : 'Registrar Nuevo Alumno' ?></h2>
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .form-title {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: var(--border);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.875rem;
+        color: var(--secondary);
+        margin-bottom: 2rem;
+        letter-spacing: 0.05em;
+    }
+
+    .form-card {
+        background: white;
+        border: 2px solid var(--border);
+        padding: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+        font-size: 0.95rem;
+    }
+
+    .required {
+        color: var(--accent);
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.875rem;
+        border: 2px solid var(--border);
+        font-family: 'Karla', sans-serif;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: #fffbf5;
+    }
+
+    .form-group small {
+        display: block;
+        margin-top: 0.5rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.75rem;
+        opacity: 0.7;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 0.75rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e3df;
+    }
+
+    .btn-accion {
+        padding: 0.875rem 1.75rem;
+        border: 2px solid;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: var(--secondary);
+        border-color: var(--secondary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: white;
+        color: var(--secondary);
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: white;
+        border-color: var(--border);
+        color: var(--text);
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg);
+    }
+
+    #loading {
+        text-align: center;
+        padding: 3rem;
+        font-family: 'DM Mono', monospace;
+        color: var(--text);
+        opacity: 0.6;
+    }
+
+    .mensaje {
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        border: 2px solid;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mensaje::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+    }
+
+    .mensaje-success {
+        background: #f8fff8;
+        border-color: var(--secondary);
+        color: var(--secondary);
+    }
+
+    .mensaje-success::before {
+        background: var(--secondary);
+    }
+
+    .mensaje-error {
+        background: #fff8f8;
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .mensaje-error::before {
+        background: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-accion {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="form-container">
+    <h1 class="form-title"><?= $isEdit ? 'Editar Alumno' : 'Nuevo Alumno' ?></h1>
+    <div class="form-subtitle">GESTIÓN DE ALUMNOS</div>
     
     <div id="loading" style="<?= $isEdit ? '' : 'display:none;' ?>">
-        Cargando datos...
+        Cargando datos del alumno...
     </div>
     
-    <div id="mensaje" style="display:none; padding: 10px; margin: 10px 0;"></div>
+    <div id="mensaje" style="display:none;"></div>
     
-    <form id="formAlumno" style="<?= $isEdit ? 'display:none;' : '' ?>">
-        <?php if ($isEdit): ?>
-        <input type="hidden" id="id_alumno" value="<?= $id ?>">
-        <?php endif; ?>
-        
-        <div class="form-group">
-            <label>Nombre: <span class="required">*</span></label>
-            <input type="text" id="nombre" name="nombre" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Apellido Paterno: <span class="required">*</span></label>
-            <input type="text" id="apellido_paterno" name="apellido_paterno" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Apellido Materno:</label>
-            <input type="text" id="apellido_materno" name="apellido_materno">
-        </div>
-        
-        <div class="form-group">
-            <label>Grupo: <span class="required">*</span></label>
-            <select id="id_grupo" name="id_grupo" required>
-                <option value="">Seleccione un grupo...</option>
-            </select>
-        </div>
-        
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">
-                <?= $isEdit ? 'Actualizar Alumno' : 'Registrar Alumno' ?>
-            </button>
-            <a href="ver_alumnos.php" class="btn-secondary">Cancelar</a>
-        </div>
-    </form>
+    <div class="form-card" style="<?= $isEdit ? 'display:none;' : '' ?>">
+        <form id="formAlumno">
+            <?php if ($isEdit): ?>
+            <input type="hidden" id="id_alumno" value="<?= $id ?>">
+            <?php endif; ?>
+            
+            <div class="form-group">
+                <label>Nombre(s): <span class="required">*</span></label>
+                <input type="text" id="nombre" name="nombre" required 
+                       placeholder="Ingrese el nombre del alumno">
+            </div>
+            
+            <div class="form-group">
+                <label>Apellido Paterno: <span class="required">*</span></label>
+                <input type="text" id="apellido_paterno" name="apellido_paterno" required
+                       placeholder="Ingrese el apellido paterno">
+            </div>
+            
+            <div class="form-group">
+                <label>Apellido Materno:</label>
+                <input type="text" id="apellido_materno" name="apellido_materno"
+                       placeholder="Ingrese el apellido materno (opcional)">
+            </div>
+            
+            <div class="form-group">
+                <label>Grupo: <span class="required">*</span></label>
+                <select id="id_grupo" name="id_grupo" required>
+                    <option value="">Seleccione un grupo...</option>
+                </select>
+                <small>Seleccione el grupo al que pertenecerá el alumno</small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-accion btn-primary">
+                    <?= $isEdit ? '✓ Actualizar Alumno' : '+ Registrar Alumno' ?>
+                </button>
+                <a href="ver_alumnos.php" class="btn-accion btn-secondary">← Cancelar</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -68,10 +253,13 @@ async function cargarGrupos() {
         if (data.success) {
             const select = document.getElementById('id_grupo');
             
-            data.data.forEach(grupo => {
+            // Filtrar solo grupos activos
+            const gruposActivos = data.data.filter(g => g.activo == 1);
+            
+            gruposActivos.forEach(grupo => {
                 const option = document.createElement('option');
                 option.value = grupo.id_grupo;
-                option.textContent = `${grupo.clave} - ${grupo.carrera} ${grupo.turno}`;
+                option.textContent = `${grupo.clave} - ${grupo.carrera} (${grupo.turno})`;
                 select.appendChild(option);
             });
             
@@ -103,7 +291,7 @@ async function cargarAlumno() {
             
             // Mostrar formulario
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('formAlumno').style.display = 'block';
+            document.querySelector('.form-card').style.display = 'block';
         } else {
             throw new Error(data.message);
         }
@@ -174,103 +362,13 @@ document.getElementById('formAlumno').addEventListener('submit', async (e) => {
 function mostrarMensaje(texto, tipo) {
     const mensaje = document.getElementById('mensaje');
     mensaje.textContent = texto;
+    mensaje.className = 'mensaje mensaje-' + tipo;
     mensaje.style.display = 'block';
-    mensaje.style.backgroundColor = tipo === 'success' ? '#d4edda' : '#f8d7da';
-    mensaje.style.color = tipo === 'success' ? '#155724' : '#721c24';
-    mensaje.style.border = `1px solid ${tipo === 'success' ? '#c3e6cb' : '#f5c6cb'}`;
-    mensaje.style.borderRadius = '4px';
+    
+    // Scroll al mensaje
+    mensaje.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // Inicializar
 cargarGrupos();
 </script>
-
-<style>
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-.required {
-    color: #dc3545;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
-
-.form-actions {
-    margin-top: 25px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-secondary {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #6c757d;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 16px;
-    font-weight: 500;
-    text-align: center;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
-}
-
-#loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-size: 16px;
-}
-</style>
-

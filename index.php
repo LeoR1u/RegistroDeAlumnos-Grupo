@@ -133,29 +133,4 @@ include 'includes/header.php';
     <h1 class="home-title">Administración</h1>
     <div class="home-subtitle">SISTEMA ESCOLAR</div>
     
-    <nav class="menu">
-        <a href="ver_alumnos.php" class="menu-item">
-            <span class="icon">👁</span>
-            <span class="label">Ver Alumnos</span>
-            <span class="arrow">→</span>
-        </a>
-        
-        <a href="formulario_alumno.php" class="menu-item">
-            <span class="icon">+</span>
-            <span class="label">Registrar Alumno</span>
-            <span class="arrow">→</span>
-        </a>
-        
-        <a href="ver_grupos.php" class="menu-item">
-            <span class="icon">◆</span>
-            <span class="label">Gestionar Grupos</span>
-            <span class="arrow">→</span>
-        </a>
-
-        <a href="formulario_grupo.php" class="menu-item">
-            <span class="icon">+</span>
-            <span class="label">Crear Grupo</span>
-            <span class="arrow">→</span>
-        </a>
-    </nav>
 </div>

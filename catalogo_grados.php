@@ -1,8 +1,8 @@
 <?php
-$pageTitle = 'Catálogo de Carreras';
+$pageTitle = 'Catálogo de Grados';
 $breadcrumb = [
     ['text' => 'Catálogos', 'url' => 'catalogos.php'],
-    ['text' => 'Carreras']
+    ['text' => 'Grados']
 ];
 include 'includes/header.php';
 ?>
@@ -24,20 +24,30 @@ include 'includes/header.php';
     }
 
     .btn-nuevo {
-        background: var(--accent);
+        background: var(--tertiary);
         color: white;
         padding: 0.75rem 1.5rem;
         text-decoration: none;
-        border: 2px solid var(--accent);
+        border: 2px solid var(--tertiary);
         font-weight: 600;
         transition: all 0.2s ease;
         display: inline-block;
+        cursor: pointer;
     }
 
     .btn-nuevo:hover {
         background: white;
-        color: var(--accent);
+        color: var(--tertiary);
         transform: translateY(-2px);
+    }
+
+    .info-box {
+        background: #fffbf5;
+        border: 2px solid var(--tertiary);
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.875rem;
     }
 
     .tabla-catalogo {
@@ -157,35 +167,40 @@ include 'includes/header.php';
         opacity: 0.6;
     }
 
-    .empty-state {
-        text-align: center;
-        padding: 3rem;
-        color: var(--text);
-        opacity: 0.6;
+    .grado-numero {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--tertiary);
     }
 </style>
 
 <div class="catalogo-header">
-    <h1 class="catalogo-title">Carreras</h1>
-    <button class="btn-nuevo" onclick="mostrarFormulario()">+ Nueva Carrera</button>
+    <h1 class="catalogo-title">Grados</h1>
+    <button class="btn-nuevo" onclick="mostrarFormulario()">+ Nuevo Grado</button>
 </div>
 
 <div id="formularioContainer" style="display: none; margin-bottom: 2rem;">
     <div style="background: white; border: 2px solid var(--border); padding: 1.5rem;">
-        <h3 style="margin-bottom: 1rem; font-weight: 600;" id="formTitle">Nueva Carrera</h3>
-        <form id="formCarrera">
-            <input type="hidden" id="id_carrera" value="">
+        <h3 style="margin-bottom: 1rem; font-weight: 600;" id="formTitle">Nuevo Grado</h3>
+        <form id="formGrado">
+            <input type="hidden" id="id_grado" value="">
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Número de Grado:</label>
+                <input type="number" id="numero" required min="1" max="15"
+                       style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); font-family: 'Karla', sans-serif;">
+                <small style="display: block; margin-top: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.75rem; opacity: 0.7;">
+                    Ingrese un número del 1 al 15
+                </small>
+            </div>
             
             <div style="margin-bottom: 1rem;">
                 <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Nombre:</label>
                 <input type="text" id="nombre" required 
                        style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); font-family: 'Karla', sans-serif;">
-            </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Abreviatura:</label>
-                <input type="text" id="abreviatura" required maxlength="10"
-                       style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); font-family: 'Karla', sans-serif;">
+                <small style="display: block; margin-top: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.75rem; opacity: 0.7;">
+                    Ejemplo: "Primer Semestre", "1° Grado", etc.
+                </small>
             </div>
             
             <div style="display: flex; gap: 0.5rem;">
@@ -196,70 +211,72 @@ include 'includes/header.php';
     </div>
 </div>
 
-<div id="loading">Cargando carreras...</div>
+<div id="loading">Cargando grados...</div>
 
-<table class="tabla-catalogo" id="tablaCarreras" style="display: none;">
+<table class="tabla-catalogo" id="tablaGrados" style="display: none;">
     <thead>
         <tr>
+            <th>Grado</th>
             <th>Nombre</th>
-            <th>Abreviatura</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody id="carrerasBody">
+    <tbody id="gradosBody">
     </tbody>
 </table>
 
 <script>
 let editandoId = null;
 
-async function cargarCarreras() {
+async function cargarGrados() {
     try {
-        const response = await fetch('/api/carreras.php');
+        const response = await fetch('/api/grados.php');
         const data = await response.json();
         
         if (data.success) {
-            mostrarCarreras(data.data);
+            mostrarGrados(data.data);
         }
     } catch (error) {
-        document.getElementById('loading').textContent = 'Error al cargar carreras: ' + error.message;
+        document.getElementById('loading').textContent = 'Error al cargar grados: ' + error.message;
     }
 }
 
-function mostrarCarreras(carreras) {
-    const tbody = document.getElementById('carrerasBody');
-    const tabla = document.getElementById('tablaCarreras');
+function mostrarGrados(grados) {
+    const tbody = document.getElementById('gradosBody');
+    const tabla = document.getElementById('tablaGrados');
     const loading = document.getElementById('loading');
     
     tbody.innerHTML = '';
     
-    if (carreras.length === 0) {
-        loading.innerHTML = '<div class="empty-state">No hay carreras registradas</div>';
+    if (grados.length === 0) {
+        loading.innerHTML = '<div class="empty-state">No hay grados registrados</div>';
         return;
     }
     
-    carreras.forEach(carrera => {
+    grados.forEach(grado => {
         const tr = document.createElement('tr');
-        if (carrera.activo == 0) {
+        if (grado.activo == 0) {
             tr.classList.add('inactivo');
         }
         
         tr.innerHTML = `
-            <td><strong>${carrera.nombre}</strong></td>
-            <td>${carrera.abreviatura}</td>
             <td>
-                <span class="badge ${carrera.activo == 1 ? 'badge-activo' : 'badge-inactivo'}">
-                    ${carrera.activo == 1 ? 'ACTIVO' : 'INACTIVO'}
+                <span class="grado-numero">${grado.numero}°</span>
+            </td>
+            <td><strong>${grado.nombre}</strong></td>
+            <td>
+                <span class="badge ${grado.activo == 1 ? 'badge-activo' : 'badge-inactivo'}">
+                    ${grado.activo == 1 ? 'ACTIVO' : 'INACTIVO'}
                 </span>
             </td>
             <td class="acciones">
-                <button class="btn-accion btn-editar" onclick="editarCarrera(${carrera.id_carrera}, '${carrera.nombre}', '${carrera.abreviatura}')">
+                <button class="btn-accion btn-editar" onclick="editarGrado(${grado.id_grado}, ${grado.numero}, '${grado.nombre}')">
                     Editar
                 </button>
-                <button class="btn-accion ${carrera.activo == 1 ? 'btn-toggle' : 'btn-activar'}" 
-                        onclick="toggleCarrera(${carrera.id_carrera}, ${carrera.activo})">
-                    ${carrera.activo == 1 ? 'Desactivar' : 'Activar'}
+                <button class="btn-accion ${grado.activo == 1 ? 'btn-toggle' : 'btn-activar'}" 
+                        onclick="toggleGrado(${grado.id_grado}, ${grado.activo})">
+                    ${grado.activo == 1 ? 'Desactivar' : 'Activar'}
                 </button>
             </td>
         `;
@@ -272,36 +289,36 @@ function mostrarCarreras(carreras) {
 
 function mostrarFormulario() {
     document.getElementById('formularioContainer').style.display = 'block';
-    document.getElementById('formTitle').textContent = 'Nueva Carrera';
-    document.getElementById('formCarrera').reset();
-    document.getElementById('id_carrera').value = '';
+    document.getElementById('formTitle').textContent = 'Nuevo Grado';
+    document.getElementById('formGrado').reset();
+    document.getElementById('id_grado').value = '';
     editandoId = null;
 }
 
 function ocultarFormulario() {
     document.getElementById('formularioContainer').style.display = 'none';
-    document.getElementById('formCarrera').reset();
+    document.getElementById('formGrado').reset();
     editandoId = null;
 }
 
-function editarCarrera(id, nombre, abreviatura) {
+function editarGrado(id, numero, nombre) {
     editandoId = id;
     document.getElementById('formularioContainer').style.display = 'block';
-    document.getElementById('formTitle').textContent = 'Editar Carrera';
-    document.getElementById('id_carrera').value = id;
+    document.getElementById('formTitle').textContent = 'Editar Grado';
+    document.getElementById('id_grado').value = id;
+    document.getElementById('numero').value = numero;
     document.getElementById('nombre').value = nombre;
-    document.getElementById('abreviatura').value = abreviatura;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-async function toggleCarrera(id, estadoActual) {
+async function toggleGrado(id, estadoActual) {
     const accion = estadoActual == 1 ? 'desactivar' : 'activar';
-    if (!confirm(`¿Está seguro de ${accion} esta carrera?`)) {
+    if (!confirm(`¿Está seguro de ${accion} este grado?`)) {
         return;
     }
     
     try {
-        const response = await fetch(`/api/carreras.php?id=${id}`, {
+        const response = await fetch(`/api/grados.php?id=${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ activo: estadoActual == 1 ? 0 : 1 })
@@ -311,7 +328,7 @@ async function toggleCarrera(id, estadoActual) {
         
         if (data.success) {
             alert(data.message);
-            cargarCarreras();
+            cargarGrados();
         } else {
             alert('Error: ' + data.message);
         }
@@ -320,20 +337,28 @@ async function toggleCarrera(id, estadoActual) {
     }
 }
 
-document.getElementById('formCarrera').addEventListener('submit', async (e) => {
+document.getElementById('formGrado').addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const numero = parseInt(document.getElementById('numero').value);
+    const nombre = document.getElementById('nombre').value.trim();
+    
+    if (numero < 1 || numero > 15) {
+        alert('El número de grado debe estar entre 1 y 15');
+        return;
+    }
+    
     const formData = {
-        nombre: document.getElementById('nombre').value.trim(),
-        abreviatura: document.getElementById('abreviatura').value.trim().toUpperCase()
+        numero: numero,
+        nombre: nombre
     };
     
     try {
-        let url = '/api/carreras.php';
+        let url = '/api/grados.php';
         let method = 'POST';
         
         if (editandoId) {
-            url = `/api/carreras.php?id=${editandoId}`;
+            url = `/api/grados.php?id=${editandoId}`;
             method = 'PUT';
         }
         
@@ -348,7 +373,7 @@ document.getElementById('formCarrera').addEventListener('submit', async (e) => {
         if (data.success) {
             alert(data.message);
             ocultarFormulario();
-            cargarCarreras();
+            cargarGrados();
         } else {
             alert('Error: ' + data.message);
         }
@@ -357,5 +382,5 @@ document.getElementById('formCarrera').addEventListener('submit', async (e) => {
     }
 });
 
-cargarCarreras();
+cargarGrados();
 </script>

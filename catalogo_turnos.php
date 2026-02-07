@@ -194,7 +194,6 @@ include 'includes/header.php';
 <table class="tabla-catalogo" id="tablaTurnos" style="display: none;">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
             <th>Abreviatura</th>
             <th>Estado</th>
@@ -240,7 +239,6 @@ function mostrarTurnos(turnos) {
         }
         
         tr.innerHTML = `
-            <td>${turno.id_turno}</td>
             <td><strong>${turno.nombre}</strong></td>
             <td>${turno.abreviatura}</td>
             <td>
@@ -354,5 +352,3 @@ document.getElementById('formTurno').addEventListener('submit', async (e) => {
 
 cargarTurnos();
 </script>
-
-<?php include 'includes/footer.php'; ?>
