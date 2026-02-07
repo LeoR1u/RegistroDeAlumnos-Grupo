@@ -118,7 +118,7 @@ function createGrupo($db) {
     $idTurno = (int)$data['id_turno'];
     $grado = (int)$data['grado'];
     
-    if ($grado < 1 || $grado > 11) jsonError('El grado debe estar entre 1 y 11');
+    if ($grado < 1 || $grado > 9) jsonError('El grado debe estar entre 1 y 9');
     
     try {
         // Obtener abreviaturas
